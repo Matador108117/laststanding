@@ -70,11 +70,7 @@ class _LoginPageState extends State<LoginPage> {
         desc: descripcion,
         buttons: [
           DialogButton(
-            onPressed: () {
-              if (ModalRoute.of(context)?.isCurrent ?? false) {
-                Navigator.of(context).pop();
-              }
-            },
+            onPressed: () => Navigator.pop(context), // ✅ CORREGIDO
             child: Text("Aceptar", style: TextStyle(color: Colors.white)),
           ),
         ],
@@ -182,7 +178,7 @@ class _LoginPageState extends State<LoginPage> {
                           mostrarAlerta(
                             tipo: AlertType.info,
                             titulo: appState.username,
-                            descripcion: "Bienvenido a innsalud",
+                            descripcion: "Welcome to BoatApp",
                           );
                         },
                         onError: (error) {

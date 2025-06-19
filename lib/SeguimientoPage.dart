@@ -49,11 +49,7 @@ class SeguimientoPage extends StatelessWidget {
           TextFormField(
             keyboardType: TextInputType.url,
             controller: urlController,
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(
-                RegExp("[:/.a-zA-Z ]"),
-              ), // Allow only digits
-            ],
+            inputFormatters: [],
             validator: (value) {
               if (value!.isEmpty || value.length < 1) {
                 return 'Please enter a url';
@@ -62,9 +58,9 @@ class SeguimientoPage extends StatelessWidget {
             },
 
             decoration: InputDecoration(
-              labelText: 'git url',
+              labelText: 'Image url',
               border: OutlineInputBorder(),
-              hintText: 'git url',
+              hintText: 'Image url',
             ),
           ),
           SizedBox(height: 20),
@@ -74,7 +70,7 @@ class SeguimientoPage extends StatelessWidget {
             controller: descriptionController,
             inputFormatters: [
               FilteringTextInputFormatter.allow(
-                RegExp("[:/.a-zA-Z ]"),
+                RegExp(r"[a-zA-Z0-9 ,.\-_:;/()¿?!¡]"),
               ), // Allow only digits
             ],
             validator: (value) {

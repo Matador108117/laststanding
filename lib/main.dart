@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
           return GraphQLProvider(
             client: client,
             child: MaterialApp(
-              title: 'innSalud',
+              title: 'BoatApp',
               theme: ThemeData(
                 useMaterial3: true,
                 colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
@@ -104,16 +104,16 @@ class _MyHomePageState extends State<MyHomePage> {
                         label: 'Login',
                       ),
                       BottomNavigationBarItem(
-                        icon: Icon(Icons.add_card),
-                        label: 'Seguimiento',
+                        icon: Icon(Icons.add_box),
+                        label: 'Add boat tweet',
                       ),
                       BottomNavigationBarItem(
                         icon: Icon(Icons.abc_sharp),
-                        label: 'Historial',
+                        label: 'Home',
                       ),
                       BottomNavigationBarItem(
                         icon: Icon(Icons.add_box),
-                        label: 'Perfil',
+                        label: 'Acount',
                       ),
                     ],
                     currentIndex: appState.selectedIndex,
@@ -136,15 +136,15 @@ class _MyHomePageState extends State<MyHomePage> {
                         label: Text('Login'),
                       ),
                       NavigationRailDestination(
-                        icon: Icon(Icons.add_card),
-                        label: Text('Seguimiento'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.abc_sharp),
-                        label: Text('Historial'),
-                      ),
-                      NavigationRailDestination(
                         icon: Icon(Icons.add_box),
+                        label: Text('Add tweet'),
+                      ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.home),
+                        label: Text('Home'),
+                      ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.account_circle),
                         label: Text('Perfil'),
                       ),
                     ],

@@ -2,6 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+const String deleteLinkMutation = r'''
+mutation DeleteLink($linkId: Int!) {
+  deleteLink(linkId: $linkId) {
+    success
+    message
+  }
+}
+''';
+
 const String reactionsByLinkQuery = r'''
 query ReactionsByLink($linkId: Int!) {
   reactionsByLink(linkId: $linkId) {
@@ -98,9 +107,53 @@ class _PostCardState extends State<PostCard> {
               ),
               trailing:
                   widget.canDelete
-                      ? IconButton(
-                        icon: const Icon(Icons.delete_outline),
-                        onPressed: widget.onDelete,
+                      ? Mutation(
+                        options: MutationOptions(
+                          document: gql(deleteLinkMutation),
+                          onCompleted: (_) {
+                            if (widget.onDelete != null) {
+                              widget
+                                  .onDelete!(); // Llama a función de actualización
+                            }
+                          },
+                        ),
+                        builder: (runMutation, result) {
+                          return IconButton(
+                            icon: const Icon(Icons.delete_outline),
+                            onPressed: () async {
+                              final confirm = await showDialog<bool>(
+                                context: context,
+                                builder:
+                                    (_) => AlertDialog(
+                                      title: const Text(
+                                        '¿Eliminar publicación?',
+                                      ),
+                                      content: const Text(
+                                        'Esta acción no se puede deshacer.',
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed:
+                                              () =>
+                                                  Navigator.pop(context, false),
+                                          child: const Text('Cancelar'),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed:
+                                              () =>
+                                                  Navigator.pop(context, true),
+                                          child: const Text('Eliminar'),
+                                        ),
+                                      ],
+                                    ),
+                              );
+
+                              if (confirm == true) {
+                                runMutation({"linkId": widget.linkId});
+                              }
+                            },
+                          );
+                        },
                       )
                       : null,
             ),
@@ -114,26 +167,25 @@ class _PostCardState extends State<PostCard> {
             if (widget.imageUrl.isNotEmpty)
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: CachedNetworkImage(
-                  imageUrl: widget.imageUrl,
-                  fit: BoxFit.cover,
-                  height: 200,
-                  width: double.infinity,
-                  placeholder:
-                      (context, url) =>
-                          const Center(child: CircularProgressIndicator()),
-                  errorWidget:
-                      (context, url, error) => Container(
-                        height: 200,
-                        width: double.infinity,
-                        color: Colors.grey[300],
-                        alignment: Alignment.center,
-                        child: const Icon(
-                          Icons.broken_image,
-                          size: 48,
-                          color: Colors.grey,
+                child: AspectRatio(
+                  aspectRatio: 16 / 9, // relación 16:9
+                  child: CachedNetworkImage(
+                    imageUrl: widget.imageUrl,
+                    fit: BoxFit.cover,
+                    placeholder:
+                        (context, url) =>
+                            const Center(child: CircularProgressIndicator()),
+                    errorWidget:
+                        (context, url, error) => Container(
+                          color: Colors.grey[300],
+                          alignment: Alignment.center,
+                          child: const Icon(
+                            Icons.broken_image,
+                            size: 48,
+                            color: Colors.grey,
+                          ),
                         ),
-                      ),
+                  ),
                 ),
               ),
 

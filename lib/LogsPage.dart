@@ -25,9 +25,7 @@ class LogsPage extends StatelessWidget {
     final myUserId = appState.userId; // Asegúrate de tener esto en tu estado
 
     if (appState.token.isEmpty) {
-      return const Center(
-        child: Text('No login yet.'),
-      );
+      return const Center(child: Text('No login yet.'));
     }
 
     return Query(
@@ -61,10 +59,12 @@ class LogsPage extends StatelessWidget {
               username: username,
               description: description,
               imageUrl: imageUrl,
-              canDelete: "$userId" == "${appState.userId}", // Comparar como strings
+              canDelete:
+                  "$userId" == "${appState.userId}", // Comparar como strings
               onDelete: () {
-                // Aquí puedes implementar la mutación de eliminación
-                print("Eliminar publicación $postId");
+                if (refetch != null) {
+                  refetch(); // 🔁 Recarga los posts tras eliminar
+                }
               },
             );
           },
